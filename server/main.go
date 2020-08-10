@@ -8,13 +8,11 @@ import (
 	"net"
 )
 
-
-
 func main() {
 
 	log.Println("Starting Greet Server...")
 
-	lis,err := net.Listen("tcp",":8765")
+	lis, err := net.Listen("tcp", ":8765")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -24,7 +22,7 @@ func main() {
 	pb.RegisterScrapperServiceServer(s, &scrapper.Service{})
 	pb.RegisterEncryptionServiceServer(s, &scrapper.Encryptor{})
 
-	if err := s.Serve(lis) ; err != nil {
-		log.Fatal("Cannot serve",err)
+	if err := s.Serve(lis); err != nil {
+		log.Fatal("Cannot serve", err)
 	}
 }

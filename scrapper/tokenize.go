@@ -8,7 +8,6 @@ import (
 )
 
 type Encryptor struct {
-
 }
 
 func (e *Encryptor) Tokenize(ctx context.Context, in *scrapperpb.TokenizationRequest) (*scrapperpb.TokenizationResponse, error) {
@@ -20,15 +19,15 @@ func (e *Encryptor) Tokenize(ctx context.Context, in *scrapperpb.TokenizationReq
 	key, ok := Keys.Get(in.KID)
 
 	if !ok {
-		return nil,status.Errorf(codes.InvalidArgument , "Invalid key id for tokenization")
+		return nil, status.Errorf(codes.InvalidArgument, "Invalid key id for tokenization")
 	}
 
 	out, err := Tokenize(in.Data, key.KeyByte, key.IV)
 	if err != nil {
-		return nil,status.Errorf(codes.Internal , "failed to tokenize")
+		return nil, status.Errorf(codes.Internal, "failed to tokenize")
 	}
 
-	return &scrapperpb.TokenizationResponse{KID:in.KID,Data:out},nil
+	return &scrapperpb.TokenizationResponse{KID: in.KID, Data: out}, nil
 }
 func (e *Encryptor) DeTokenize(ctx context.Context, in *scrapperpb.TokenizationRequest) (*scrapperpb.TokenizationResponse, error) {
 	if len(in.KID) == 0 {
@@ -38,14 +37,13 @@ func (e *Encryptor) DeTokenize(ctx context.Context, in *scrapperpb.TokenizationR
 	key, ok := Keys.Get(in.KID)
 
 	if !ok {
-		return nil,status.Errorf(codes.InvalidArgument , "invalid key id for detokenization")
+		return nil, status.Errorf(codes.InvalidArgument, "invalid key id for detokenization")
 	}
 
 	out, err := Detokenize(in.Data, key.KeyByte, key.IV)
 	if err != nil {
-		return nil,status.Errorf(codes.Internal , "failed to detokenize")
+		return nil, status.Errorf(codes.Internal, "failed to detokenize")
 	}
 
-	return &scrapperpb.TokenizationResponse{KID:in.KID,Data:out},nil
+	return &scrapperpb.TokenizationResponse{KID: in.KID, Data: out}, nil
 }
-

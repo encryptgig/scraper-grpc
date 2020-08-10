@@ -10,11 +10,11 @@ import (
 )
 
 type Key struct {
-	ID      string      `json:"id,omitempty"`
-	KeyByte []byte      `json:"key_byte,omitempty"`
-	IV      []byte      `json:"iv,omitempty"`
-	Algo    string      `json:"algo,omitempty"`
-	Size    int         `json:"size,omitempty"`
+	ID      string `json:"id,omitempty"`
+	KeyByte []byte `json:"key_byte,omitempty"`
+	IV      []byte `json:"iv,omitempty"`
+	Algo    string `json:"algo,omitempty"`
+	Size    int    `json:"size,omitempty"`
 	Meta    string `json:"meta,omitempty"`
 }
 
@@ -80,10 +80,10 @@ func getKeyBytes(key string) ([]byte, error) {
 func init() {
 	kb, _ := getKeyBytes("C1AB55FE70ACC6EEB61FCDB0DF48FF799C35E1C1B3835AB86203FF8582734D09")
 	iv, _ := getKeyBytes("F162046AFC1F2302FE7D11E4629068F1")
-	Keys["default_key"] = &Key{KeyByte: kb, IV: iv, ID: "default_key", Size:256, Algo:"aes"}
+	Keys["default_key"] = &Key{KeyByte: kb, IV: iv, ID: "default_key", Size: 256, Algo: "aes"}
 }
 
-func ConfigureKey(in *scrapperpb.Key) (kid string, err error){
+func ConfigureKey(in *scrapperpb.Key) (kid string, err error) {
 
 	kb, err := getKeyBytes(in.KeyBytes)
 	if err != nil {
@@ -111,7 +111,7 @@ func ConfigureKey(in *scrapperpb.Key) (kid string, err error){
 	}
 	Keys.Add(&key)
 
-	return id,nil
+	return id, nil
 
 }
 
