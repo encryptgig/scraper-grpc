@@ -1,3 +1,3 @@
 #!/bin/bash
 
-protoc scrapper.proto --go_out=plugins=grpc:.
+protoc *.proto --go_out=plugins=grpc:.

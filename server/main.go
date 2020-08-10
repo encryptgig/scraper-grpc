@@ -22,9 +22,9 @@ func main() {
 	s := grpc.NewServer()
 
 	pb.RegisterScrapperServiceServer(s, &scrapper.Service{})
+	pb.RegisterEncryptionServiceServer(s, &scrapper.Encryptor{})
 
 	if err := s.Serve(lis) ; err != nil {
 		log.Fatal("Cannot serve",err)
 	}
-
 }

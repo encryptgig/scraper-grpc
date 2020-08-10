@@ -15,7 +15,7 @@ type Key struct {
 	IV      []byte      `json:"iv,omitempty"`
 	Algo    string      `json:"algo,omitempty"`
 	Size    int         `json:"size,omitempty"`
-	Meta    interface{} `json:"meta,omitempty"`
+	Meta    string `json:"meta,omitempty"`
 }
 
 func (k *Key) ValidateKey() (err error) {
@@ -125,7 +125,7 @@ func ListKeys() *scrapperpb.KeyList {
 	for _, v := range Keys {
 		kl := &scrapperpb.KeyInfo{}
 		kl.ID = v.ID
-		kl.Meta, _ = v.Meta.(string)
+		kl.Meta = v.Meta
 		kl.KeySize = int32(v.Size)
 		kl.KeyAlgorithm = v.Algo
 		out.Key = append(out.Key, kl)
