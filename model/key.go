@@ -12,7 +12,12 @@ type Key struct {
 	Meta    string
 }
 
-func (k *Key) CreateGroup(db *gorm.DB) error {
+func (k *Key) CreateKey(db *gorm.DB) error {
 	return db.Create(k).Error
 }
 
+func (g *Key) ListKey(db *gorm.DB, owner string ) (*[]Key, error) {
+	out := &[]Key{}
+	err := db.Where("owner_id = ?",owner).Find(out).Error
+	return out, err
+}
