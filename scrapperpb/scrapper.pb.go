@@ -10,8 +10,6 @@ import (
 	context "context"
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -29,21 +27,19 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
-type Key struct {
+type Resource struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ID           string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
-	KeyBytes     string `protobuf:"bytes,2,opt,name=key_bytes,json=keyBytes,proto3" json:"key_bytes,omitempty"`
-	KeyIv        string `protobuf:"bytes,3,opt,name=key_iv,json=keyIv,proto3" json:"key_iv,omitempty"`
-	KeyAlgorithm string `protobuf:"bytes,4,opt,name=key_algorithm,json=keyAlgorithm,proto3" json:"key_algorithm,omitempty"`
-	KeySize      int32  `protobuf:"varint,5,opt,name=key_size,json=keySize,proto3" json:"key_size,omitempty"`
-	Meta         string `protobuf:"bytes,6,opt,name=meta,proto3" json:"meta,omitempty"`
+	ID        string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
+	URI       string `protobuf:"bytes,2,opt,name=URI,proto3" json:"URI,omitempty"`
+	Account   string `protobuf:"bytes,3,opt,name=Account,proto3" json:"Account,omitempty"`
+	CreatedAt string `protobuf:"bytes,4,opt,name=CreatedAt,proto3" json:"CreatedAt,omitempty"`
 }
 
-func (x *Key) Reset() {
-	*x = Key{}
+func (x *Resource) Reset() {
+	*x = Resource{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_scrapper_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -51,13 +47,13 @@ func (x *Key) Reset() {
 	}
 }
 
-func (x *Key) String() string {
+func (x *Resource) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Key) ProtoMessage() {}
+func (*Resource) ProtoMessage() {}
 
-func (x *Key) ProtoReflect() protoreflect.Message {
+func (x *Resource) ProtoReflect() protoreflect.Message {
 	mi := &file_scrapper_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -69,67 +65,57 @@ func (x *Key) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Key.ProtoReflect.Descriptor instead.
-func (*Key) Descriptor() ([]byte, []int) {
+// Deprecated: Use Resource.ProtoReflect.Descriptor instead.
+func (*Resource) Descriptor() ([]byte, []int) {
 	return file_scrapper_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Key) GetID() string {
+func (x *Resource) GetID() string {
 	if x != nil {
 		return x.ID
 	}
 	return ""
 }
 
-func (x *Key) GetKeyBytes() string {
+func (x *Resource) GetURI() string {
 	if x != nil {
-		return x.KeyBytes
+		return x.URI
 	}
 	return ""
 }
 
-func (x *Key) GetKeyIv() string {
+func (x *Resource) GetAccount() string {
 	if x != nil {
-		return x.KeyIv
+		return x.Account
 	}
 	return ""
 }
 
-func (x *Key) GetKeyAlgorithm() string {
+func (x *Resource) GetCreatedAt() string {
 	if x != nil {
-		return x.KeyAlgorithm
+		return x.CreatedAt
 	}
 	return ""
 }
 
-func (x *Key) GetKeySize() int32 {
-	if x != nil {
-		return x.KeySize
-	}
-	return 0
-}
-
-func (x *Key) GetMeta() string {
-	if x != nil {
-		return x.Meta
-	}
-	return ""
-}
-
-type KeyInfo struct {
+type KeyBlock struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ID           string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
-	KeyIv        string `protobuf:"bytes,2,opt,name=key_iv,json=keyIv,proto3" json:"key_iv,omitempty"`
-	KeyAlgorithm string `protobuf:"bytes,3,opt,name=key_algorithm,json=keyAlgorithm,proto3" json:"key_algorithm,omitempty"`
-	KeySize      int32  `protobuf:"varint,4,opt,name=key_size,json=keySize,proto3" json:"key_size,omitempty"`
-	Meta         string `protobuf:"bytes,5,opt,name=meta,proto3" json:"meta,omitempty"`
+	Resource            *Resource       `protobuf:"bytes,1,opt,name=Resource,proto3" json:"Resource,omitempty"`
+	KeyFormatType       KeyFormatType   `protobuf:"varint,2,opt,name=KeyFormatType,proto3,enum=scrapperpb.KeyFormatType" json:"KeyFormatType,omitempty"`
+	Material            string          `protobuf:"bytes,3,opt,name=Material,proto3" json:"Material,omitempty"`
+	CryptoAlgorithm     CryptoAlgorithm `protobuf:"varint,4,opt,name=CryptoAlgorithm,proto3,enum=scrapperpb.CryptoAlgorithm" json:"CryptoAlgorithm,omitempty"`
+	CryptographicLength int32           `protobuf:"varint,5,opt,name=CryptographicLength,proto3" json:"CryptographicLength,omitempty"`
+	Name                []string        `protobuf:"bytes,6,rep,name=Name,proto3" json:"Name,omitempty"`
+	KeyAttributes       *KeyAttributes  `protobuf:"bytes,7,opt,name=KeyAttributes,proto3" json:"KeyAttributes,omitempty"`
+	KeyOwners           []*Owners       `protobuf:"bytes,8,rep,name=KeyOwners,proto3" json:"KeyOwners,omitempty"`
+	KeyUsers            []*KeyUsers     `protobuf:"bytes,9,rep,name=KeyUsers,proto3" json:"KeyUsers,omitempty"` //wrapping data is pending
 }
 
-func (x *KeyInfo) Reset() {
-	*x = KeyInfo{}
+func (x *KeyBlock) Reset() {
+	*x = KeyBlock{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_scrapper_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -137,13 +123,13 @@ func (x *KeyInfo) Reset() {
 	}
 }
 
-func (x *KeyInfo) String() string {
+func (x *KeyBlock) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*KeyInfo) ProtoMessage() {}
+func (*KeyBlock) ProtoMessage() {}
 
-func (x *KeyInfo) ProtoReflect() protoreflect.Message {
+func (x *KeyBlock) ProtoReflect() protoreflect.Message {
 	mi := &file_scrapper_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -155,44 +141,72 @@ func (x *KeyInfo) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use KeyInfo.ProtoReflect.Descriptor instead.
-func (*KeyInfo) Descriptor() ([]byte, []int) {
+// Deprecated: Use KeyBlock.ProtoReflect.Descriptor instead.
+func (*KeyBlock) Descriptor() ([]byte, []int) {
 	return file_scrapper_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *KeyInfo) GetID() string {
+func (x *KeyBlock) GetResource() *Resource {
 	if x != nil {
-		return x.ID
+		return x.Resource
+	}
+	return nil
+}
+
+func (x *KeyBlock) GetKeyFormatType() KeyFormatType {
+	if x != nil {
+		return x.KeyFormatType
+	}
+	return KeyFormatType_KeyFormatTypeRaw
+}
+
+func (x *KeyBlock) GetMaterial() string {
+	if x != nil {
+		return x.Material
 	}
 	return ""
 }
 
-func (x *KeyInfo) GetKeyIv() string {
+func (x *KeyBlock) GetCryptoAlgorithm() CryptoAlgorithm {
 	if x != nil {
-		return x.KeyIv
+		return x.CryptoAlgorithm
 	}
-	return ""
+	return CryptoAlgorithm_NONE
 }
 
-func (x *KeyInfo) GetKeyAlgorithm() string {
+func (x *KeyBlock) GetCryptographicLength() int32 {
 	if x != nil {
-		return x.KeyAlgorithm
-	}
-	return ""
-}
-
-func (x *KeyInfo) GetKeySize() int32 {
-	if x != nil {
-		return x.KeySize
+		return x.CryptographicLength
 	}
 	return 0
 }
 
-func (x *KeyInfo) GetMeta() string {
+func (x *KeyBlock) GetName() []string {
 	if x != nil {
-		return x.Meta
+		return x.Name
 	}
-	return ""
+	return nil
+}
+
+func (x *KeyBlock) GetKeyAttributes() *KeyAttributes {
+	if x != nil {
+		return x.KeyAttributes
+	}
+	return nil
+}
+
+func (x *KeyBlock) GetKeyOwners() []*Owners {
+	if x != nil {
+		return x.KeyOwners
+	}
+	return nil
+}
+
+func (x *KeyBlock) GetKeyUsers() []*KeyUsers {
+	if x != nil {
+		return x.KeyUsers
+	}
+	return nil
 }
 
 type Empty struct {
@@ -233,503 +247,52 @@ func (*Empty) Descriptor() ([]byte, []int) {
 	return file_scrapper_proto_rawDescGZIP(), []int{2}
 }
 
-type KeyList struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Key []*KeyInfo `protobuf:"bytes,1,rep,name=key,proto3" json:"key,omitempty"`
-}
-
-func (x *KeyList) Reset() {
-	*x = KeyList{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_scrapper_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *KeyList) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*KeyList) ProtoMessage() {}
-
-func (x *KeyList) ProtoReflect() protoreflect.Message {
-	mi := &file_scrapper_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use KeyList.ProtoReflect.Descriptor instead.
-func (*KeyList) Descriptor() ([]byte, []int) {
-	return file_scrapper_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *KeyList) GetKey() []*KeyInfo {
-	if x != nil {
-		return x.Key
-	}
-	return nil
-}
-
-type KeyCreateRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Key *Key `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
-}
-
-func (x *KeyCreateRequest) Reset() {
-	*x = KeyCreateRequest{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_scrapper_proto_msgTypes[4]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *KeyCreateRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*KeyCreateRequest) ProtoMessage() {}
-
-func (x *KeyCreateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_scrapper_proto_msgTypes[4]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use KeyCreateRequest.ProtoReflect.Descriptor instead.
-func (*KeyCreateRequest) Descriptor() ([]byte, []int) {
-	return file_scrapper_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *KeyCreateRequest) GetKey() *Key {
-	if x != nil {
-		return x.Key
-	}
-	return nil
-}
-
-type KeyCreateResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
-}
-
-func (x *KeyCreateResponse) Reset() {
-	*x = KeyCreateResponse{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_scrapper_proto_msgTypes[5]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *KeyCreateResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*KeyCreateResponse) ProtoMessage() {}
-
-func (x *KeyCreateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_scrapper_proto_msgTypes[5]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use KeyCreateResponse.ProtoReflect.Descriptor instead.
-func (*KeyCreateResponse) Descriptor() ([]byte, []int) {
-	return file_scrapper_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *KeyCreateResponse) GetID() string {
-	if x != nil {
-		return x.ID
-	}
-	return ""
-}
-
-type KeyInfoRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
-}
-
-func (x *KeyInfoRequest) Reset() {
-	*x = KeyInfoRequest{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_scrapper_proto_msgTypes[6]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *KeyInfoRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*KeyInfoRequest) ProtoMessage() {}
-
-func (x *KeyInfoRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_scrapper_proto_msgTypes[6]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use KeyInfoRequest.ProtoReflect.Descriptor instead.
-func (*KeyInfoRequest) Descriptor() ([]byte, []int) {
-	return file_scrapper_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *KeyInfoRequest) GetID() string {
-	if x != nil {
-		return x.ID
-	}
-	return ""
-}
-
-type KeyInfoResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Key *KeyInfo `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
-}
-
-func (x *KeyInfoResponse) Reset() {
-	*x = KeyInfoResponse{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_scrapper_proto_msgTypes[7]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *KeyInfoResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*KeyInfoResponse) ProtoMessage() {}
-
-func (x *KeyInfoResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_scrapper_proto_msgTypes[7]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use KeyInfoResponse.ProtoReflect.Descriptor instead.
-func (*KeyInfoResponse) Descriptor() ([]byte, []int) {
-	return file_scrapper_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *KeyInfoResponse) GetKey() *KeyInfo {
-	if x != nil {
-		return x.Key
-	}
-	return nil
-}
-
-type KeyExportRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
-}
-
-func (x *KeyExportRequest) Reset() {
-	*x = KeyExportRequest{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_scrapper_proto_msgTypes[8]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *KeyExportRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*KeyExportRequest) ProtoMessage() {}
-
-func (x *KeyExportRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_scrapper_proto_msgTypes[8]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use KeyExportRequest.ProtoReflect.Descriptor instead.
-func (*KeyExportRequest) Descriptor() ([]byte, []int) {
-	return file_scrapper_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *KeyExportRequest) GetID() string {
-	if x != nil {
-		return x.ID
-	}
-	return ""
-}
-
-type KeyExportResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Key *Key `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
-}
-
-func (x *KeyExportResponse) Reset() {
-	*x = KeyExportResponse{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_scrapper_proto_msgTypes[9]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *KeyExportResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*KeyExportResponse) ProtoMessage() {}
-
-func (x *KeyExportResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_scrapper_proto_msgTypes[9]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use KeyExportResponse.ProtoReflect.Descriptor instead.
-func (*KeyExportResponse) Descriptor() ([]byte, []int) {
-	return file_scrapper_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *KeyExportResponse) GetKey() *Key {
-	if x != nil {
-		return x.Key
-	}
-	return nil
-}
-
-type KeyDeleteRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
-}
-
-func (x *KeyDeleteRequest) Reset() {
-	*x = KeyDeleteRequest{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_scrapper_proto_msgTypes[10]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *KeyDeleteRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*KeyDeleteRequest) ProtoMessage() {}
-
-func (x *KeyDeleteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_scrapper_proto_msgTypes[10]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use KeyDeleteRequest.ProtoReflect.Descriptor instead.
-func (*KeyDeleteRequest) Descriptor() ([]byte, []int) {
-	return file_scrapper_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *KeyDeleteRequest) GetID() string {
-	if x != nil {
-		return x.ID
-	}
-	return ""
-}
-
-type KeyDeleteResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
-}
-
-func (x *KeyDeleteResponse) Reset() {
-	*x = KeyDeleteResponse{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_scrapper_proto_msgTypes[11]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *KeyDeleteResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*KeyDeleteResponse) ProtoMessage() {}
-
-func (x *KeyDeleteResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_scrapper_proto_msgTypes[11]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use KeyDeleteResponse.ProtoReflect.Descriptor instead.
-func (*KeyDeleteResponse) Descriptor() ([]byte, []int) {
-	return file_scrapper_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *KeyDeleteResponse) GetID() string {
-	if x != nil {
-		return x.ID
-	}
-	return ""
-}
-
 var File_scrapper_proto protoreflect.FileDescriptor
 
 var file_scrapper_proto_rawDesc = []byte{
 	0x0a, 0x0e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x12, 0x0a, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x22, 0x9d, 0x01, 0x0a,
-	0x03, 0x4b, 0x65, 0x79, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x02, 0x49, 0x44, 0x12, 0x1b, 0x0a, 0x09, 0x6b, 0x65, 0x79, 0x5f, 0x62, 0x79, 0x74, 0x65,
-	0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6b, 0x65, 0x79, 0x42, 0x79, 0x74, 0x65,
-	0x73, 0x12, 0x15, 0x0a, 0x06, 0x6b, 0x65, 0x79, 0x5f, 0x69, 0x76, 0x18, 0x03, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x05, 0x6b, 0x65, 0x79, 0x49, 0x76, 0x12, 0x23, 0x0a, 0x0d, 0x6b, 0x65, 0x79, 0x5f,
-	0x61, 0x6c, 0x67, 0x6f, 0x72, 0x69, 0x74, 0x68, 0x6d, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x0c, 0x6b, 0x65, 0x79, 0x41, 0x6c, 0x67, 0x6f, 0x72, 0x69, 0x74, 0x68, 0x6d, 0x12, 0x19, 0x0a,
-	0x08, 0x6b, 0x65, 0x79, 0x5f, 0x73, 0x69, 0x7a, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x05, 0x52,
-	0x07, 0x6b, 0x65, 0x79, 0x53, 0x69, 0x7a, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6d, 0x65, 0x74, 0x61,
-	0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6d, 0x65, 0x74, 0x61, 0x22, 0x84, 0x01, 0x0a,
-	0x07, 0x4b, 0x65, 0x79, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x12, 0x15, 0x0a, 0x06, 0x6b, 0x65, 0x79, 0x5f,
-	0x69, 0x76, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6b, 0x65, 0x79, 0x49, 0x76, 0x12,
-	0x23, 0x0a, 0x0d, 0x6b, 0x65, 0x79, 0x5f, 0x61, 0x6c, 0x67, 0x6f, 0x72, 0x69, 0x74, 0x68, 0x6d,
-	0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x6b, 0x65, 0x79, 0x41, 0x6c, 0x67, 0x6f, 0x72,
-	0x69, 0x74, 0x68, 0x6d, 0x12, 0x19, 0x0a, 0x08, 0x6b, 0x65, 0x79, 0x5f, 0x73, 0x69, 0x7a, 0x65,
-	0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52, 0x07, 0x6b, 0x65, 0x79, 0x53, 0x69, 0x7a, 0x65, 0x12,
-	0x12, 0x0a, 0x04, 0x6d, 0x65, 0x74, 0x61, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6d,
-	0x65, 0x74, 0x61, 0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x30, 0x0a, 0x07,
-	0x4b, 0x65, 0x79, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x25, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01,
-	0x20, 0x03, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70,
-	0x62, 0x2e, 0x4b, 0x65, 0x79, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x35,
-	0x0a, 0x10, 0x4b, 0x65, 0x79, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x12, 0x21, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x0f, 0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x2e, 0x4b, 0x65, 0x79,
-	0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x23, 0x0a, 0x11, 0x4b, 0x65, 0x79, 0x43, 0x72, 0x65, 0x61,
-	0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x20, 0x0a, 0x0e, 0x4b, 0x65,
-	0x79, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02,
-	0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x38, 0x0a, 0x0f,
-	0x4b, 0x65, 0x79, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
-	0x25, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x73,
-	0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x2e, 0x4b, 0x65, 0x79, 0x49, 0x6e, 0x66,
-	0x6f, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x22, 0x22, 0x0a, 0x10, 0x4b, 0x65, 0x79, 0x45, 0x78, 0x70,
-	0x6f, 0x72, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x36, 0x0a, 0x11, 0x4b, 0x65,
-	0x79, 0x45, 0x78, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
-	0x21, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x73,
-	0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x2e, 0x4b, 0x65, 0x79, 0x52, 0x03, 0x6b,
-	0x65, 0x79, 0x22, 0x22, 0x0a, 0x10, 0x4b, 0x65, 0x79, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x22, 0x23, 0x0a, 0x11, 0x4b, 0x65, 0x79, 0x44, 0x65, 0x6c,
-	0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x49,
-	0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x32, 0xf4, 0x02, 0x0a, 0x0f,
-	0x53, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12,
-	0x4a, 0x0a, 0x09, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x4b, 0x65, 0x79, 0x12, 0x1c, 0x2e, 0x73,
-	0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x2e, 0x4b, 0x65, 0x79, 0x43, 0x72, 0x65,
-	0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1d, 0x2e, 0x73, 0x63, 0x72,
-	0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x2e, 0x4b, 0x65, 0x79, 0x43, 0x72, 0x65, 0x61, 0x74,
-	0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x34, 0x0a, 0x08, 0x4c,
-	0x69, 0x73, 0x74, 0x4b, 0x65, 0x79, 0x73, 0x12, 0x11, 0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70,
-	0x65, 0x72, 0x70, 0x62, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x13, 0x2e, 0x73, 0x63, 0x72,
-	0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x2e, 0x4b, 0x65, 0x79, 0x4c, 0x69, 0x73, 0x74, 0x22,
-	0x00, 0x12, 0x47, 0x0a, 0x0a, 0x47, 0x65, 0x74, 0x4b, 0x65, 0x79, 0x49, 0x6e, 0x66, 0x6f, 0x12,
-	0x1a, 0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x2e, 0x4b, 0x65, 0x79,
-	0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1b, 0x2e, 0x73, 0x63,
-	0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x2e, 0x4b, 0x65, 0x79, 0x49, 0x6e, 0x66, 0x6f,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x4a, 0x0a, 0x09, 0x45, 0x78,
-	0x70, 0x6f, 0x72, 0x74, 0x4b, 0x65, 0x79, 0x12, 0x1c, 0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70,
-	0x65, 0x72, 0x70, 0x62, 0x2e, 0x4b, 0x65, 0x79, 0x45, 0x78, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1d, 0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72,
-	0x70, 0x62, 0x2e, 0x4b, 0x65, 0x79, 0x45, 0x78, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x4a, 0x0a, 0x09, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65,
-	0x4b, 0x65, 0x79, 0x12, 0x1c, 0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62,
-	0x2e, 0x4b, 0x65, 0x79, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x1a, 0x1d, 0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x2e, 0x4b,
-	0x65, 0x79, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x22, 0x00, 0x42, 0x0c, 0x5a, 0x0a, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x12, 0x0a, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x1a, 0x10, 0x61, 0x74,
+	0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x0b,
+	0x65, 0x6e, 0x75, 0x6d, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x64, 0x0a, 0x08, 0x52,
+	0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x49, 0x44, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x44, 0x12, 0x10, 0x0a, 0x03, 0x55, 0x52, 0x49, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x55, 0x52, 0x49, 0x12, 0x18, 0x0a, 0x07, 0x41, 0x63, 0x63,
+	0x6f, 0x75, 0x6e, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x41, 0x63, 0x63, 0x6f,
+	0x75, 0x6e, 0x74, 0x12, 0x1c, 0x0a, 0x09, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74,
+	0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x41,
+	0x74, 0x22, 0xcb, 0x03, 0x0a, 0x08, 0x4b, 0x65, 0x79, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x12, 0x30,
+	0x0a, 0x08, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x14, 0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x2e, 0x52, 0x65,
+	0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x08, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65,
+	0x12, 0x3f, 0x0a, 0x0d, 0x4b, 0x65, 0x79, 0x46, 0x6f, 0x72, 0x6d, 0x61, 0x74, 0x54, 0x79, 0x70,
+	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x19, 0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70,
+	0x65, 0x72, 0x70, 0x62, 0x2e, 0x4b, 0x65, 0x79, 0x46, 0x6f, 0x72, 0x6d, 0x61, 0x74, 0x54, 0x79,
+	0x70, 0x65, 0x52, 0x0d, 0x4b, 0x65, 0x79, 0x46, 0x6f, 0x72, 0x6d, 0x61, 0x74, 0x54, 0x79, 0x70,
+	0x65, 0x12, 0x1a, 0x0a, 0x08, 0x4d, 0x61, 0x74, 0x65, 0x72, 0x69, 0x61, 0x6c, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x08, 0x4d, 0x61, 0x74, 0x65, 0x72, 0x69, 0x61, 0x6c, 0x12, 0x45, 0x0a,
+	0x0f, 0x43, 0x72, 0x79, 0x70, 0x74, 0x6f, 0x41, 0x6c, 0x67, 0x6f, 0x72, 0x69, 0x74, 0x68, 0x6d,
+	0x18, 0x04, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x1b, 0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65,
+	0x72, 0x70, 0x62, 0x2e, 0x43, 0x72, 0x79, 0x70, 0x74, 0x6f, 0x41, 0x6c, 0x67, 0x6f, 0x72, 0x69,
+	0x74, 0x68, 0x6d, 0x52, 0x0f, 0x43, 0x72, 0x79, 0x70, 0x74, 0x6f, 0x41, 0x6c, 0x67, 0x6f, 0x72,
+	0x69, 0x74, 0x68, 0x6d, 0x12, 0x30, 0x0a, 0x13, 0x43, 0x72, 0x79, 0x70, 0x74, 0x6f, 0x67, 0x72,
+	0x61, 0x70, 0x68, 0x69, 0x63, 0x4c, 0x65, 0x6e, 0x67, 0x74, 0x68, 0x18, 0x05, 0x20, 0x01, 0x28,
+	0x05, 0x52, 0x13, 0x43, 0x72, 0x79, 0x70, 0x74, 0x6f, 0x67, 0x72, 0x61, 0x70, 0x68, 0x69, 0x63,
+	0x4c, 0x65, 0x6e, 0x67, 0x74, 0x68, 0x12, 0x12, 0x0a, 0x04, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x06,
+	0x20, 0x03, 0x28, 0x09, 0x52, 0x04, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x3f, 0x0a, 0x0d, 0x4b, 0x65,
+	0x79, 0x41, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x18, 0x07, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x19, 0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x2e, 0x4b,
+	0x65, 0x79, 0x41, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x52, 0x0d, 0x4b, 0x65,
+	0x79, 0x41, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73, 0x12, 0x30, 0x0a, 0x09, 0x4b,
+	0x65, 0x79, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x73, 0x18, 0x08, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x12,
+	0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x2e, 0x4f, 0x77, 0x6e, 0x65,
+	0x72, 0x73, 0x52, 0x09, 0x4b, 0x65, 0x79, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x73, 0x12, 0x30, 0x0a,
+	0x08, 0x4b, 0x65, 0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x18, 0x09, 0x20, 0x03, 0x28, 0x0b, 0x32,
+	0x14, 0x2e, 0x73, 0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x2e, 0x4b, 0x65, 0x79,
+	0x55, 0x73, 0x65, 0x72, 0x73, 0x52, 0x08, 0x4b, 0x65, 0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x22,
+	0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x32, 0x11, 0x0a, 0x0f, 0x53, 0x63, 0x72, 0x61,
+	0x70, 0x70, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x42, 0x0c, 0x5a, 0x0a, 0x73,
+	0x63, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x33,
 }
 
 var (
@@ -744,41 +307,29 @@ func file_scrapper_proto_rawDescGZIP() []byte {
 	return file_scrapper_proto_rawDescData
 }
 
-var file_scrapper_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_scrapper_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_scrapper_proto_goTypes = []interface{}{
-	(*Key)(nil),               // 0: scrapperpb.Key
-	(*KeyInfo)(nil),           // 1: scrapperpb.KeyInfo
-	(*Empty)(nil),             // 2: scrapperpb.Empty
-	(*KeyList)(nil),           // 3: scrapperpb.KeyList
-	(*KeyCreateRequest)(nil),  // 4: scrapperpb.KeyCreateRequest
-	(*KeyCreateResponse)(nil), // 5: scrapperpb.KeyCreateResponse
-	(*KeyInfoRequest)(nil),    // 6: scrapperpb.KeyInfoRequest
-	(*KeyInfoResponse)(nil),   // 7: scrapperpb.KeyInfoResponse
-	(*KeyExportRequest)(nil),  // 8: scrapperpb.KeyExportRequest
-	(*KeyExportResponse)(nil), // 9: scrapperpb.KeyExportResponse
-	(*KeyDeleteRequest)(nil),  // 10: scrapperpb.KeyDeleteRequest
-	(*KeyDeleteResponse)(nil), // 11: scrapperpb.KeyDeleteResponse
+	(*Resource)(nil),      // 0: scrapperpb.Resource
+	(*KeyBlock)(nil),      // 1: scrapperpb.KeyBlock
+	(*Empty)(nil),         // 2: scrapperpb.Empty
+	(KeyFormatType)(0),    // 3: scrapperpb.KeyFormatType
+	(CryptoAlgorithm)(0),  // 4: scrapperpb.CryptoAlgorithm
+	(*KeyAttributes)(nil), // 5: scrapperpb.KeyAttributes
+	(*Owners)(nil),        // 6: scrapperpb.Owners
+	(*KeyUsers)(nil),      // 7: scrapperpb.KeyUsers
 }
 var file_scrapper_proto_depIdxs = []int32{
-	1,  // 0: scrapperpb.KeyList.key:type_name -> scrapperpb.KeyInfo
-	0,  // 1: scrapperpb.KeyCreateRequest.key:type_name -> scrapperpb.Key
-	1,  // 2: scrapperpb.KeyInfoResponse.key:type_name -> scrapperpb.KeyInfo
-	0,  // 3: scrapperpb.KeyExportResponse.key:type_name -> scrapperpb.Key
-	4,  // 4: scrapperpb.ScrapperService.CreateKey:input_type -> scrapperpb.KeyCreateRequest
-	2,  // 5: scrapperpb.ScrapperService.ListKeys:input_type -> scrapperpb.Empty
-	6,  // 6: scrapperpb.ScrapperService.GetKeyInfo:input_type -> scrapperpb.KeyInfoRequest
-	8,  // 7: scrapperpb.ScrapperService.ExportKey:input_type -> scrapperpb.KeyExportRequest
-	10, // 8: scrapperpb.ScrapperService.DeleteKey:input_type -> scrapperpb.KeyDeleteRequest
-	5,  // 9: scrapperpb.ScrapperService.CreateKey:output_type -> scrapperpb.KeyCreateResponse
-	3,  // 10: scrapperpb.ScrapperService.ListKeys:output_type -> scrapperpb.KeyList
-	7,  // 11: scrapperpb.ScrapperService.GetKeyInfo:output_type -> scrapperpb.KeyInfoResponse
-	9,  // 12: scrapperpb.ScrapperService.ExportKey:output_type -> scrapperpb.KeyExportResponse
-	11, // 13: scrapperpb.ScrapperService.DeleteKey:output_type -> scrapperpb.KeyDeleteResponse
-	9,  // [9:14] is the sub-list for method output_type
-	4,  // [4:9] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	0, // 0: scrapperpb.KeyBlock.Resource:type_name -> scrapperpb.Resource
+	3, // 1: scrapperpb.KeyBlock.KeyFormatType:type_name -> scrapperpb.KeyFormatType
+	4, // 2: scrapperpb.KeyBlock.CryptoAlgorithm:type_name -> scrapperpb.CryptoAlgorithm
+	5, // 3: scrapperpb.KeyBlock.KeyAttributes:type_name -> scrapperpb.KeyAttributes
+	6, // 4: scrapperpb.KeyBlock.KeyOwners:type_name -> scrapperpb.Owners
+	7, // 5: scrapperpb.KeyBlock.KeyUsers:type_name -> scrapperpb.KeyUsers
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_scrapper_proto_init() }
@@ -786,9 +337,11 @@ func file_scrapper_proto_init() {
 	if File_scrapper_proto != nil {
 		return
 	}
+	file_attributes_proto_init()
+	file_enums_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_scrapper_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Key); i {
+			switch v := v.(*Resource); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -800,7 +353,7 @@ func file_scrapper_proto_init() {
 			}
 		}
 		file_scrapper_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*KeyInfo); i {
+			switch v := v.(*KeyBlock); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -823,114 +376,6 @@ func file_scrapper_proto_init() {
 				return nil
 			}
 		}
-		file_scrapper_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*KeyList); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_scrapper_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*KeyCreateRequest); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_scrapper_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*KeyCreateResponse); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_scrapper_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*KeyInfoRequest); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_scrapper_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*KeyInfoResponse); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_scrapper_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*KeyExportRequest); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_scrapper_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*KeyExportResponse); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_scrapper_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*KeyDeleteRequest); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_scrapper_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*KeyDeleteResponse); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -938,7 +383,7 @@ func file_scrapper_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_scrapper_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -964,11 +409,6 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ScrapperServiceClient interface {
-	CreateKey(ctx context.Context, in *KeyCreateRequest, opts ...grpc.CallOption) (*KeyCreateResponse, error)
-	ListKeys(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*KeyList, error)
-	GetKeyInfo(ctx context.Context, in *KeyInfoRequest, opts ...grpc.CallOption) (*KeyInfoResponse, error)
-	ExportKey(ctx context.Context, in *KeyExportRequest, opts ...grpc.CallOption) (*KeyExportResponse, error)
-	DeleteKey(ctx context.Context, in *KeyDeleteRequest, opts ...grpc.CallOption) (*KeyDeleteResponse, error)
 }
 
 type scrapperServiceClient struct {
@@ -979,199 +419,22 @@ func NewScrapperServiceClient(cc grpc.ClientConnInterface) ScrapperServiceClient
 	return &scrapperServiceClient{cc}
 }
 
-func (c *scrapperServiceClient) CreateKey(ctx context.Context, in *KeyCreateRequest, opts ...grpc.CallOption) (*KeyCreateResponse, error) {
-	out := new(KeyCreateResponse)
-	err := c.cc.Invoke(ctx, "/scrapperpb.ScrapperService/CreateKey", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *scrapperServiceClient) ListKeys(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*KeyList, error) {
-	out := new(KeyList)
-	err := c.cc.Invoke(ctx, "/scrapperpb.ScrapperService/ListKeys", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *scrapperServiceClient) GetKeyInfo(ctx context.Context, in *KeyInfoRequest, opts ...grpc.CallOption) (*KeyInfoResponse, error) {
-	out := new(KeyInfoResponse)
-	err := c.cc.Invoke(ctx, "/scrapperpb.ScrapperService/GetKeyInfo", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *scrapperServiceClient) ExportKey(ctx context.Context, in *KeyExportRequest, opts ...grpc.CallOption) (*KeyExportResponse, error) {
-	out := new(KeyExportResponse)
-	err := c.cc.Invoke(ctx, "/scrapperpb.ScrapperService/ExportKey", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *scrapperServiceClient) DeleteKey(ctx context.Context, in *KeyDeleteRequest, opts ...grpc.CallOption) (*KeyDeleteResponse, error) {
-	out := new(KeyDeleteResponse)
-	err := c.cc.Invoke(ctx, "/scrapperpb.ScrapperService/DeleteKey", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ScrapperServiceServer is the server API for ScrapperService service.
 type ScrapperServiceServer interface {
-	CreateKey(context.Context, *KeyCreateRequest) (*KeyCreateResponse, error)
-	ListKeys(context.Context, *Empty) (*KeyList, error)
-	GetKeyInfo(context.Context, *KeyInfoRequest) (*KeyInfoResponse, error)
-	ExportKey(context.Context, *KeyExportRequest) (*KeyExportResponse, error)
-	DeleteKey(context.Context, *KeyDeleteRequest) (*KeyDeleteResponse, error)
 }
 
 // UnimplementedScrapperServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedScrapperServiceServer struct {
 }
 
-func (*UnimplementedScrapperServiceServer) CreateKey(context.Context, *KeyCreateRequest) (*KeyCreateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateKey not implemented")
-}
-func (*UnimplementedScrapperServiceServer) ListKeys(context.Context, *Empty) (*KeyList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListKeys not implemented")
-}
-func (*UnimplementedScrapperServiceServer) GetKeyInfo(context.Context, *KeyInfoRequest) (*KeyInfoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetKeyInfo not implemented")
-}
-func (*UnimplementedScrapperServiceServer) ExportKey(context.Context, *KeyExportRequest) (*KeyExportResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ExportKey not implemented")
-}
-func (*UnimplementedScrapperServiceServer) DeleteKey(context.Context, *KeyDeleteRequest) (*KeyDeleteResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteKey not implemented")
-}
-
 func RegisterScrapperServiceServer(s *grpc.Server, srv ScrapperServiceServer) {
 	s.RegisterService(&_ScrapperService_serviceDesc, srv)
-}
-
-func _ScrapperService_CreateKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(KeyCreateRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ScrapperServiceServer).CreateKey(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scrapperpb.ScrapperService/CreateKey",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ScrapperServiceServer).CreateKey(ctx, req.(*KeyCreateRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ScrapperService_ListKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ScrapperServiceServer).ListKeys(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scrapperpb.ScrapperService/ListKeys",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ScrapperServiceServer).ListKeys(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ScrapperService_GetKeyInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(KeyInfoRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ScrapperServiceServer).GetKeyInfo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scrapperpb.ScrapperService/GetKeyInfo",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ScrapperServiceServer).GetKeyInfo(ctx, req.(*KeyInfoRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ScrapperService_ExportKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(KeyExportRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ScrapperServiceServer).ExportKey(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scrapperpb.ScrapperService/ExportKey",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ScrapperServiceServer).ExportKey(ctx, req.(*KeyExportRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ScrapperService_DeleteKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(KeyDeleteRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ScrapperServiceServer).DeleteKey(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/scrapperpb.ScrapperService/DeleteKey",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ScrapperServiceServer).DeleteKey(ctx, req.(*KeyDeleteRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 var _ScrapperService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "scrapperpb.ScrapperService",
 	HandlerType: (*ScrapperServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "CreateKey",
-			Handler:    _ScrapperService_CreateKey_Handler,
-		},
-		{
-			MethodName: "ListKeys",
-			Handler:    _ScrapperService_ListKeys_Handler,
-		},
-		{
-			MethodName: "GetKeyInfo",
-			Handler:    _ScrapperService_GetKeyInfo_Handler,
-		},
-		{
-			MethodName: "ExportKey",
-			Handler:    _ScrapperService_ExportKey_Handler,
-		},
-		{
-			MethodName: "DeleteKey",
-			Handler:    _ScrapperService_DeleteKey_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "scrapper.proto",
+	Methods:     []grpc.MethodDesc{},
+	Streams:     []grpc.StreamDesc{},
+	Metadata:    "scrapper.proto",
 }

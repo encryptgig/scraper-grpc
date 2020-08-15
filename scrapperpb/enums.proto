@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package scrapperpb;
+
+
+
+enum KeyStates {
+  PRE_ACTIVE = 0;
+  ACTIVE = 1;
+  DEACTIVATED = 2;
+  DESTROYED = 3;
+  DESTROYED_COMPROMISED = 4;
+  COMPROMISED = 5;
+};
+
+enum KeyFormatType {
+  KeyFormatTypeRaw   = 0;
+  KeyFormatTypeOpaque   = 1;
+  KeyFormatTypePKCS1     = 2;
+  KeyFormatTypePKCS8     = 3;
+  KeyFormatTypeX509      = 4;
+  KeyFormatTypeECPrivateKey       = 5;
+  KeyFormatTypeTransparentSymmetricKey    = 6;
+  KeyFormatTypeTransparentDSAPrivateKey  = 7;
+  KeyFormatTypeTransparentDSAPublicKey  = 8;
+  KeyFormatTypeTransparentRSAPrivateKey   = 9;
+  KeyFormatTypeTransparentRSAPublicKey    = 10;
+  KeyFormatTypeTransparentDHPrivateKey    = 11;
+  KeyFormatTypeTransparentDHPublicKey      = 12;
+  KeyFormatTypeTransparentECDSAPrivateKey  = 13;
+  KeyFormatTypeTransparentECDSAPublicKey  = 14;
+  KeyFormatTypeTransparentECDHPrivateKey  = 15;
+  KeyFormatTypeTransparentECDHPublicKey   = 16;
+  KeyFormatTypeTransparentECMQVPrivateKey  = 17;
+  KeyFormatTypeTransparentECMQVPublicKey  = 18;
+  KeyFormatTypeTransparentECPrivateKey    = 19;
+  KeyFormatTypeTransparentECPublicKey    = 20;
+  KeyFormatTypePKCS12                     = 21;
+};
+
+
+enum CryptoAlgorithm {
+  NONE = 0;
+	CryptographicAlgorithmDES               = 0x00000001;
+	CryptographicAlgorithmDES3              = 0x00000002;
+	CryptographicAlgorithmAES               = 0x00000003;
+	CryptographicAlgorithmRSA               = 0x00000004;
+	CryptographicAlgorithmDSA               = 0x00000005;
+	CryptographicAlgorithmECDSA             = 0x00000006;
+	CryptographicAlgorithmHMACSHA1          = 0x00000007;
+	CryptographicAlgorithmHMACSHA224        = 0x00000008;
+	CryptographicAlgorithmHMACSHA256        = 0x00000009;
+	CryptographicAlgorithmHMACSHA384        = 0x0000000a;
+	CryptographicAlgorithmHMACSHA512        = 0x0000000b;
+	CryptographicAlgorithmHMACMD5           = 0x0000000c;
+	CryptographicAlgorithmDH                = 0x0000000d;
+	CryptographicAlgorithmECDH              = 0x0000000e;
+	CryptographicAlgorithmECMQV             = 0x0000000f;
+	CryptographicAlgorithmBlowfish          = 0x00000010;
+	CryptographicAlgorithmCamellia          = 0x00000011;
+	CryptographicAlgorithmCAST5             = 0x00000012;
+	CryptographicAlgorithmIDEA              = 0x00000013;
+	CryptographicAlgorithmMARS              = 0x00000014;
+	CryptographicAlgorithmRC2               = 0x00000015;
+	CryptographicAlgorithmRC4               = 0x00000016;
+	CryptographicAlgorithmRC5               = 0x00000017;
+	CryptographicAlgorithmSKIPJACK          = 0x00000018;
+	CryptographicAlgorithmTwofish           = 0x00000019;
+	CryptographicAlgorithmEC                = 0x0000001a;
+	CryptographicAlgorithmOneTimePad        = 0x0000001b;
+	CryptographicAlgorithmChaCha20          = 0x0000001c;
+	CryptographicAlgorithmPoly1305          = 0x0000001d;
+	CryptographicAlgorithmChaCha20Poly1305  = 0x0000001e;
+	CryptographicAlgorithmSHA3224           = 0x0000001f;
+	CryptographicAlgorithmSHA3256           = 0x00000020;
+	CryptographicAlgorithmSHA3384           = 0x00000021;
+	CryptographicAlgorithmSHA3512           = 0x00000022;
+	CryptographicAlgorithmHMACSHA3224       = 0x00000023;
+	CryptographicAlgorithmHMACSHA3256       = 0x00000024;
+	CryptographicAlgorithmHMACSHA3384       = 0x00000025;
+	CryptographicAlgorithmHMACSHA3512       = 0x00000026;
+	CryptographicAlgorithmSHAKE128          = 0x00000027;
+	CryptographicAlgorithmSHAKE256          = 0x00000028;
+}

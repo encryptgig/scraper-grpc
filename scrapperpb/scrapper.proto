@@ -3,71 +3,35 @@ syntax = "proto3";
 package scrapperpb;
 
 
+import "attributes.proto";
+import "enums.proto";
+
 option go_package="scrapperpb";
 
-message Key {
+message Resource {
   string ID = 1;
-  string key_bytes = 2;
-  string key_iv = 3;
-  string key_algorithm = 4;
-  int32 key_size = 5;
-  string meta = 6;
+  string URI = 2;
+  string Account = 3;
+  string CreatedAt = 4;
 }
 
-message KeyInfo {
-  string ID = 1;
-  string key_iv = 2;
-  string key_algorithm = 3;
-  int32 key_size = 4;
-  string meta = 5;
+message KeyBlock {
+  Resource Resource = 1;
+  KeyFormatType KeyFormatType = 2;
+  string Material = 3;
+  CryptoAlgorithm CryptoAlgorithm = 4;
+  int32 CryptographicLength = 5;
+  repeated string Name = 6;
+  KeyAttributes KeyAttributes = 7;
+  repeated Owners KeyOwners = 8;
+  repeated KeyUsers KeyUsers = 9;
+  //wrapping data is pending
+
 }
 
 message Empty {
 
 }
 
-message KeyList {
-  repeated KeyInfo key = 1;
-}
-
-message KeyCreateRequest {
-  Key key = 1;
-}
-
-message KeyCreateResponse {
-  string ID = 1;
-}
-
-message KeyInfoRequest {
-  string ID = 1;
-}
-
-message KeyInfoResponse {
-  KeyInfo key = 1;
-}
-
-message KeyExportRequest {
-  string ID = 1;
-}
-
-message KeyExportResponse {
-  Key key = 1;
-}
-
-message KeyDeleteRequest {
-  string ID = 1;
-}
-
-message KeyDeleteResponse {
-  string ID = 1;
-}
-
-
-service ScrapperService {
-  rpc CreateKey(KeyCreateRequest) returns(KeyCreateResponse) {};
-  rpc ListKeys(Empty) returns(KeyList) {};
-  rpc GetKeyInfo(KeyInfoRequest) returns(KeyInfoResponse) {};
-  rpc ExportKey(KeyExportRequest) returns(KeyExportResponse) {};
-  rpc DeleteKey(KeyDeleteRequest) returns(KeyDeleteResponse) {};
-}
+service ScrapperService {}
 
